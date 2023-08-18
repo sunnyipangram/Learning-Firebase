@@ -1,12 +1,39 @@
 import logo from './logo.svg';
 import './App.css';
-import React,{useState} from 'react'
-import { app,auth,googleProvider } from './FirebaseConfig';
+import React,{useEffect, useState} from 'react'
+import { app,auth,googleProvider,db } from './FirebaseConfig';
 import { createUserWithEmailAndPassword,signInWithPopup,signOut } from 'firebase/auth';
+import {getDocs,collection} from 'firebase/firestore'
 
 
 function App() {
   const [Data, setData] = useState({email:'', password:''})
+  const [MovieList, setMovieList] = useState([])
+
+  
+
+useEffect(() => {
+  
+  GetMovieList()
+}, [])
+
+const movieCollectionRef=collection(db,"movies")
+  const GetMovieList=async()=> {
+    console.log('GetMovieList')
+    //Read the movie list
+    //setMovieList(MovieList)
+try{
+ let response= await getDocs(movieCollectionRef)
+ let filteredData=response.docs.map((doc)=>({...doc.data(),id:doc.id}))
+ 
+console.log(filteredData)
+
+}
+catch(err){
+  console.error(err.message)
+
+}
+  }
 
   const handleOnchange = (e) => {
     console.log(e.target.value)
@@ -68,6 +95,7 @@ catch(err){
       <button onClick={signInWithGoogle}>SignIn with Google</button>
       <button onClick={LogOut}>Logout</button>
       </form>
+
     </div>
   );
 }

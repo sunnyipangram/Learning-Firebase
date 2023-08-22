@@ -3,25 +3,48 @@ import './App.css';
 import React, { useEffect, useState } from 'react';
 import { auth, googleProvider, db,storage } from './FirebaseConfig';
 import { createUserWithEmailAndPassword, signInWithPopup, signOut } from 'firebase/auth';
-import { getDocs, collection, addDoc, deleteDoc,updateDoc, doc } from 'firebase/firestore';
+import { getDocs, collection, addDoc, deleteDoc,updateDoc, doc,query, orderBy, startAfter, limit } from 'firebase/firestore';
 import { ref,uploadBytes,listAll,getDownloadURL } from 'firebase/storage';
-import {AiFillDelete, AiFillEdit, AiOutlineDelete} from 'react-icons/ai'
-import Modal from 'react-modal'
-import {v4} from 'uuid'
+import {AiFillDelete, AiFillEdit, AiOutlineDelete} from 'react-icons/ai';
+import {Pagination} from '@mui/material'
+
+import Modal from 'react-modal';
+import {v4} from 'uuid';
 
 function App() {
   const [Data, setData] = useState({ email: '', password: '' });
   const [MovieList, setMovieList] = useState([]);
   const [AddMovieData, setAddMovieData] = useState({ title: '', date: 0, oscar: false });
   const [IsUpdateMovieModal, setIsUpdateMovieModal] = useState(false)
- const [editMovieData, setEditMovieData] = useState({id: '', title: '',  date: 0,  oscar: false,});
+  const [editMovieData, setEditMovieData] = useState({id: '', title: '',  date: 0,  oscar: false,});
   const [uploadfile, setuploadfile] = useState(null)
   const [ImageList, setImageList] = useState([])
+  const [totalMovies, setTotalMovies] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [lastDocument, setLastDocument] = useState(null);
+  const moviesPerPage = 5; // Movies to display per page
 
 const ImageListREf=ref(storage,'images/')
 
   useEffect(() => {
     GetMovieList();
+    console.log(MovieList)
+   
+  }, [currentPage]);
+  useEffect(() => {
+    // Fetch total number of movies
+    const fetchTotalMovies = async () => {
+      try {
+        const snapshot = await getDocs(collection(db, 'movies'));
+        setTotalMovies(snapshot.size);
+      } catch (err) {
+        console.error(err.message);
+      }
+    };
+
+    fetchTotalMovies();
+  }, [currentPage]);
+  useEffect(() => {
     listAll(ImageListREf).then((response)=>{
       console.log(response)
       response.items.forEach((item) => {
@@ -30,20 +53,43 @@ const ImageListREf=ref(storage,'images/')
           console.log(ImageList)
         })
       })
-    })
-  }, []);
+    }
+    )
+  }, [])
+  
 
   const movieCollectionRef = collection(db, 'movies');
 
   const GetMovieList = async () => {
     try {
-      const response = await getDocs(movieCollectionRef);
-      const filteredData = response.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-      setMovieList(filteredData);
+      let moviesQuery = collection(db, 'movies');
+      
+      if (lastDocument) {
+        moviesQuery = query(moviesQuery, orderBy('releaseDate'), startAfter(lastDocument), limit(moviesPerPage));
+      } else {
+        moviesQuery = query(moviesQuery, orderBy('releaseDate'), limit(moviesPerPage));
+      }
+      
+      const snapshot = await getDocs(moviesQuery);
+  
+      const movieData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+  
+      setMovieList(movieData);
+  
+      // Set the last document reference for pagination
+      if (snapshot.docs.length > 0) {
+        setLastDocument(snapshot.docs[snapshot.docs.length - 1]);
+      } else {
+        setLastDocument(null);
+      }
     } catch (err) {
       console.error(err.message);
     }
   };
+  
 
   const handleOnchange = (e) => {
     const { name, value } = e.target;
@@ -162,6 +208,13 @@ const ImageListREf=ref(storage,'images/')
   }
  
 
+  const handlePageChange = (event, newPage) => {
+    setCurrentPage(newPage);
+   
+    
+ 
+  };
+
   
 
   return (
@@ -278,6 +331,11 @@ const ImageListREf=ref(storage,'images/')
           </tbody>
         </table>
       </div>
+      <Pagination
+        count={Math.ceil(totalMovies / moviesPerPage)}
+        page={currentPage}
+        onChange={handlePageChange}
+      />
 <input type="file"  onChange={(e)=>setuploadfile(e.target.files[0])} name="" id="" />
 <button onClick={UploadImage}>Upload Image</button>
 

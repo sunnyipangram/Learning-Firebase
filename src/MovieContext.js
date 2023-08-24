@@ -17,6 +17,7 @@ export const MovieContextProvider = ({ children }) => {
   const [totalMovies, setTotalMovies] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [lastDocument, setLastDocument] = useState(null);
+  const [User,setUser] = useState(null)
   const moviesPerPage = 5;
 
   const movieCollectionRef = collection(db, 'movies');
@@ -130,7 +131,7 @@ export const MovieContextProvider = ({ children }) => {
 
   return (
    
-    <MovieContext.Provider value={{ movieList,addMovieData,setAddMovieData, editMovieData,setEditMovieData,uploadFile,setUploadFile,imageList, totalMovies, currentPage, setCurrentPage,  addMovie, deleteMovie, updateMovie, uploadImage, handlePageChange, }} >
+    <MovieContext.Provider value={{ movieList,addMovieData,setAddMovieData, editMovieData,setEditMovieData,uploadFile,setUploadFile,imageList, totalMovies, currentPage, setCurrentPage,  addMovie, deleteMovie, updateMovie, uploadImage, handlePageChange,User,setUser }} >
       {children}
     </MovieContext.Provider>
    

@@ -1,8 +1,9 @@
 import React from 'react';
 import { useMovieContext } from '../MovieContext';
+import { AiFillDelete, AiFillEdit } from 'react-icons/ai';
 
 const MovieTable = () => {
-  const { movieList, deleteMovie, editMovie } = useMovieContext();
+  const { movieList, deleteMovie, updateMovie } = useMovieContext();
 
   return (
     
@@ -42,7 +43,7 @@ const MovieTable = () => {
                   }}
                   onClick={() => deleteMovie(movie.id)}
                 >
-                  Delete
+                  <AiFillDelete/>
                 </button>
                 <button
                   style={{
@@ -54,9 +55,9 @@ const MovieTable = () => {
                     height: '25px',
                     fontSize: '20px',
                   }}
-                  onClick={() => editMovie(movie)}
+                  onClick={() => updateMovie(movie)}
                 >
-                  Edit
+                  <AiFillEdit/>
                 </button>
               </td>
             </tr>

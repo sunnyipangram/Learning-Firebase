@@ -1,5 +1,7 @@
 import React from 'react';
 import { useMovieContext } from '../MovieContext';
+import { auth } from '../FirebaseConfig';
+import { signOut } from 'firebase/auth';
 
 const MovieForm = () => {
   const { addMovieData, setAddMovieData, addMovie } = useMovieContext();
@@ -14,9 +16,19 @@ const MovieForm = () => {
     e.preventDefault();
     addMovie();
   };
+  const LogOut = async (e) => {
+    e.preventDefault();
+    try {
+      await signOut(auth);
+      console.log('User signed out');
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
 
   return (
     <form action="">
+       <button className="enter" onClick={LogOut}>Log Out</button>
       <div>
         <input
           type="text"

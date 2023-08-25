@@ -18,6 +18,7 @@ export const MovieContextProvider = ({ children }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [lastDocument, setLastDocument] = useState(null);
   const [User,setUser] = useState(null)
+  const [EditMovieModal, setEditMovieModal] = useState(false)
   const moviesPerPage = 5;
 
   const movieCollectionRef = collection(db, 'movies');
@@ -100,7 +101,8 @@ export const MovieContextProvider = ({ children }) => {
     }
   };
 
-  const updateMovie = async () => {
+  const updateMovie = async (e) => {
+   e.preventDefault()
     try {
       const movieDocRef = doc(db, 'movies', editMovieData.id);
       await updateDoc(movieDocRef, {

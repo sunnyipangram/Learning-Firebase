@@ -7,6 +7,7 @@ import PaginationComponent from './Components/PaginationComponent';
 import ImageUploader from './Components/ImageUploader';
 import './App.css'
 import { useMovieContext } from './MovieContext';
+import AddVideo from './Components/AddVideo';
 
 function App() {
   const {User,setUser}=useMovieContext()
@@ -21,6 +22,7 @@ function App() {
         <MovieTable />
         <PaginationComponent />
         <ImageUploader />
+        <AddVideo/>
         </> }
        
        

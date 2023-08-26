@@ -18,11 +18,14 @@ function App() {
       <div className="App">
         {User===null ? <SignInForm /> :
         <>
-         <MovieForm />
+        
         <MovieTable />
         <PaginationComponent />
-        <ImageUploader />
+       
         <AddVideo/>
+
+        <MovieForm />
+        <ImageUploader />
         </> }
        
        

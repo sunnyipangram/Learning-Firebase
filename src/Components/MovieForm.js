@@ -8,7 +8,7 @@ import { signOut } from 'firebase/auth';
 
 
 const MovieForm = () => {
-  const { addMovieData, setAddMovieData, addMovie } = useMovieContext();
+  const { addMovieData, setAddMovieData, addMovie,User } = useMovieContext();
 
   const handleMovieDataChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -33,12 +33,13 @@ const MovieForm = () => {
   useEffect(() => {
     
   }, [LogOut]);
+  console.log(User)
   
 
   return (
     <form action="">
     
-       <button className="enter" onClick={LogOut}>Log Out</button>
+       <button className="logout-btn" onClick={LogOut}>Log Out({User})</button>
       <div>
         <input
           type="text"

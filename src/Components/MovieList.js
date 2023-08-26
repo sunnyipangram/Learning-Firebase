@@ -88,6 +88,7 @@ const MovieTable = () => {
           </form>
         </Box>
       </Modal>
+      <div className="container">
       <table>
         <caption>Statement Summary</caption>
         <thead>
@@ -103,7 +104,7 @@ const MovieTable = () => {
             <tr key={movie.id}>
               <td
                 data-label="Account"
-                style={{ color: movie.recievedAnOscar ? 'green' : 'red' }}
+                style={{ color: movie.recievedAnOscar ? '#3b7997' : '#a82323' }}
               >
                 {movie.title}
               </td>
@@ -114,7 +115,7 @@ const MovieTable = () => {
               <td data-label="Amount">
                 <button
                   style={{
-                    color: 'red',
+                    color: '#a82323',
                     border: 'none',
                     outline: '0',
                     borderRadius: '50%',
@@ -145,6 +146,7 @@ const MovieTable = () => {
           ))}
         </tbody>
       </table>
+      </div>
    </>
   );
 };

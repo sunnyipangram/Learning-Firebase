@@ -7,7 +7,7 @@ const PaginationComponent = () => {
   const moviesPerPage = 5;
 
   return (
-    <div>
+    <div className='container'>
       <Pagination
         count={Math.ceil(totalMovies / moviesPerPage)}
         page={currentPage}
